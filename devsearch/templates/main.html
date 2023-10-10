@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>navbar</h1>
+    <a href="{% url 'add-project' %}">add project</a>
+    {% if request.user.is_authenticated %}
+
+    <p style="text-align: right;">{{request.user.username}}</p>
+    <a href="{% url 'account' %}">My Accout</a>
+    <a href="{% url 'logout' %}">Logout</a>
+    {% else %}
+    <a href="{% url 'login' %}">Login</a>
+    {% endif %}
+
+    <hr>
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% block content %}
+
+    {% endblock content %}
+
+
+    <script>
+        // This JavaScript code will display a confirmation dialog when the "Delete" button is clicked.
+        // It will ask the user if they are sure they want to delete the message.
+        // If the user clicks "OK," the form will be submitted, and the message will be deleted.
+        // If the user clicks "Cancel," the form submission will be canceled.
+      
+        // Attach a click event handler to the "Delete" buttons
+        const deleteButtons = document.querySelectorAll('.delete-button');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                const confirmed = confirm('Are you sure you want to delete?');
+                if (!confirmed) {
+                    event.preventDefault(); // Cancel the form submission if not confirmed
+                }
+            });
+        });
+      </script>
+</body>
+</html>

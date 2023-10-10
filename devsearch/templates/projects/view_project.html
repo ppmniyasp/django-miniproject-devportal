@@ -1,0 +1,50 @@
+{% extends 'main.html' %}
+
+{% block content %}
+    <h1>Display projects</h1>
+    <div>
+        <img style="max-width: 250px;" src="{{ project.profile_pic.url }}" >
+        <h2>{{project.title}}</h2>
+        <p>{{project.description}}</p>
+        <ul>
+            {% for tag in project.tag.all %}
+            <li>{{tag.name}}</li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'edit-project' project.id %}">edit project</a>
+        <form method="post" action="{% url 'delete-project' project.id %}" >
+            {% csrf_token %}
+            <a href="" class="delete-button"><input type="submit" value="Delete"></a>
+            <!-- <button class="delete-button" type="submit">Delete</button> -->
+        </form>
+    </div>
+    <hr>
+
+    {% if request.user.id in project.reviewers %}
+    <p>You have already submitted your review for this project</p>
+
+    {% elif request.user == project.owner %}
+    <p>You cannot review your own work</p>
+
+    {% elif request.user.is_authenticated %}
+    <form method="post" action="{% url 'view-project' project.id %}" >
+        {% csrf_token %}
+        {% for field in form%}
+        {{field}}
+        {% endfor %}
+        <input type="submit" value="Add A Review">
+    </form>
+    {% endif %}
+    <hr>
+    {% for review in project.review_set.all %}
+    {% if review.body %}
+        <div class="comment__details">
+            <p>@<b>{{review.owner.username}}</b></p>
+            <p class="comment__info">{{review.body|linebreaksbr}}</p>
+        </div>
+
+    </div>
+    <hr>
+    {% endif %}
+    {% endfor %}
+{% endblock content %}
